@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-arm64-openssl-1.1.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  email    String @unique
+  password String
+
+  @@map("user")
+}
+
+model Material {
+  id        String    @id @default(uuid())
+  tenant_id String
+  uom       UoM       @default(UN)
+  quantity  Int
+  cost      Float
+  Stock     Stock?    @relation(fields: [stockId], references: [id])
+  stockId   String?
+  products  Product[]
+
+  @@map("material")
+}
+
+model Stock {
+  id        String     @id @default(uuid())
+  tenant_id String
+  name      String
+  materials Material[]
+
+  @@map("stock")
+}
+
+model Product {
+  id        String     @id @default(uuid())
+  tenant_id String
+  name      String
+  materials Material[]
+  cost      Float?
+  price     Float?
+
+  @@map("product")
+}
+
+enum UoM {
+  UN
+  MT
+  CM
+  MM
+}
