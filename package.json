@@ -4,9 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "generate": "npx prisma generate",
     "dev": "ts-node-dev --exit-child --transpile-only --ignore-watch node_modules -r tsconfig-paths/register src/server.ts",
     "start": "node dist/server.js",
-    "build": "tsc && tsc-alias",
+    "build": "npm run generate && tsc && tsc-alias",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
