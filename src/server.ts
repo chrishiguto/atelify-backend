@@ -12,6 +12,6 @@ app.use(routes)
 
 app.use(errorHandler)
 
-app.listen(1337, () => {
+app.listen(8080, () => {
     console.log('🤘 Server launched!')
 })
