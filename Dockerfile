@@ -5,5 +5,5 @@ RUN npm install
 COPY . .
 ENV NODE_ENV=production
 RUN npm run build:prod
-EXPOSE 8080
+EXPOSE 1337
 CMD ["node", "dist/server.js"]
