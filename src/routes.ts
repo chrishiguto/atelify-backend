@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express'
+import { Router } from 'express'
 import { ensureAuthenticated } from './middlewares/ensureAuthenticated'
 import { CreateMaterialController } from './modules/material/useCases/createMaterial/CreateMaterialController'
 import { DeleteMaterialController } from './modules/material/useCases/deleteMaterial/DeleteMaterialController'
@@ -12,6 +12,7 @@ import { CreateStockController } from './modules/stock/useCases/createStock/Crea
 import { FindAllStockController } from './modules/stock/useCases/findAllStock/FindAllStockController'
 import { CreateUserController } from './modules/user/useCases/createUser/CreateUserController'
 import { SignInUserController } from './modules/user/useCases/signInUser/SignInUserController'
+import { CreateProductMaterialController } from './modules/productMaterial/useCases/createProductMaterial/CreateProductMaterialController'
 
 const routes = Router()
 
@@ -30,6 +31,8 @@ const findAllProductController = new FindAllProductController()
 const findByIdProductController = new FindByIdProductController()
 const createProductController = new CreateProductController()
 const updateProductController = new UpdateProductController()
+
+const createProductMaterialController = new CreateProductMaterialController()
 
 routes.post('/login', signInUserController.handle)
 routes.post('/sign-up', createUserController.handle)
@@ -58,5 +61,7 @@ routes.get(
 )
 routes.post('/product', ensureAuthenticated, createProductController.handle)
 routes.put('/product/:id', ensureAuthenticated, updateProductController.handle)
+
+routes.post('/product-material', ensureAuthenticated, createProductMaterialController.handle)
 
 export { routes }

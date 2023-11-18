@@ -14,7 +14,9 @@ export class CreateUserController {
         password
       })
 
-      return res.json(user)
+      const { id: removedId, ...responseUser } = user
+
+      return res.json(responseUser)
     } catch (err) {
       next(err)
     }

@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-ENV NODE_ENV=production
-RUN npm run build:prod
+RUN npm run generate
+RUN npm run build
 EXPOSE 1337
 CMD ["node", "dist/server.js"]

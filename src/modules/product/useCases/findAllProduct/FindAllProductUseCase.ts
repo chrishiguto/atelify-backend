@@ -11,8 +11,8 @@ export class FindAllProductUseCase {
   }
 
   async execute(tenantId: string) {
-    const product = await this.productRepository.findAll(tenantId)
+    const products = await this.productRepository.findAll(tenantId)
 
-    return product
+    return products
   }
 }

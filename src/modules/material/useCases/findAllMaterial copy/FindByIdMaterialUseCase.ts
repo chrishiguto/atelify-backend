@@ -1,28 +1,19 @@
-import { UoM } from '@prisma/client'
 import { container } from 'tsyringe'
 import { IMaterialRepository } from '@modules/material/infra/repository/IMaterialRepository'
 import { MaterialRepository } from '@modules/material/infra/repository/MaterialRepository'
 
-export interface IUpdateMaterial {
-  id: string
-  uom?: UoM
-  quantity?: number
-  cost?: number
-  stockId?: string;
-}
-
-export class UpdateMaterialUseCase {
+export class FindByIdMaterialUseCase {
   private materialRepository: IMaterialRepository
 
   constructor() {
     this.materialRepository = container.resolve(MaterialRepository)
   }
 
-  async execute({ id, ...data }: IUpdateMaterial) {
-    const material = await this.materialRepository.update({
+  async execute(id: string, tenantId: string) {
+    const material = await this.materialRepository.findById(
       id,
-      ...data
-    })
+      tenantId
+    )
 
     return material
   }

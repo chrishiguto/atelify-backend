@@ -9,10 +9,10 @@ import { HttpError } from '@utils/errors'
 
 @injectable()
 export class MaterialRepository implements IMaterialRepository {
-  constructor(@inject('PrismaClient') private repository: PrismaClient) {}
+  constructor(@inject('PrismaClient') private prisma: PrismaClient) {}
 
-  async update({ id, uom, quantity, cost }: IUpdateMaterial) {
-    const material = await this.repository.material.findUnique({
+  async update({ id, uom, quantity, cost, stockId }: IUpdateMaterial) {
+    const material = await this.prisma.material.findUnique({
       where: {
         id
       }
@@ -22,14 +22,21 @@ export class MaterialRepository implements IMaterialRepository {
       throw new HttpError(400, 'Material not found')
     }
 
-    const updatedMaterial = await this.repository.material.update({
+    const updatedMaterial = await this.prisma.material.update({
       where: {
         id
       },
       data: {
         uom,
         quantity,
-        cost
+        cost,
+        ...(stockId && { 
+          Stock: {
+            connect: {
+              id: stockId
+            }
+          }
+        })
       }
     })
 
@@ -37,7 +44,7 @@ export class MaterialRepository implements IMaterialRepository {
   }
 
   async findById(id: string) {
-    const material = await this.repository.material.findUnique(({
+    const material = await this.prisma.material.findUnique(({
       where: {
         id
       }
@@ -47,9 +54,12 @@ export class MaterialRepository implements IMaterialRepository {
   }
 
   async findAll(tenantId: string) {
-    const materials = await this.repository.material.findMany({
+    const materials = await this.prisma.material.findMany({
       where: {
         tenant_id: tenantId
+      },
+      include: {
+        productMaterial: true
       }
     })
 
@@ -57,7 +67,7 @@ export class MaterialRepository implements IMaterialRepository {
   }
 
   async delete({ id, tenantId }: IDeleteMaterial) {
-    const material = await this.repository.material.findFirst({
+    const material = await this.prisma.material.findFirst({
       where: {
         AND: [
           {
@@ -78,7 +88,7 @@ export class MaterialRepository implements IMaterialRepository {
       throw new Error('Material not found')
     }
 
-    await this.repository.material.delete({
+    await this.prisma.material.delete({
       where: {
         id
       }
@@ -88,7 +98,7 @@ export class MaterialRepository implements IMaterialRepository {
   }
 
   async create({ tenantId, uom, quantity, cost }: ICreateMaterial) {
-    const material = await this.repository.material.create({
+    const material = await this.prisma.material.create({
       data: {
         tenant_id: tenantId,
         uom,

@@ -5,7 +5,7 @@ export class UpdateMaterialController {
   async handle(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params
-      const { uom, quantity, cost } = req.body
+      const { uom, quantity, cost, stockId } = req.body
 
       const updateMaterialUseCase = new UpdateMaterialUseCase()
 
@@ -13,7 +13,8 @@ export class UpdateMaterialController {
         id,
         uom,
         quantity,
-        cost
+        cost,
+        stockId
       })
 
       return res.json(result)

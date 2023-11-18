@@ -6,10 +6,10 @@ import { IUserRepository } from '@modules/user/infra/repository/IUserRepository'
 
 @injectable()
 export class UserRepository implements IUserRepository {
-  constructor(@inject('PrismaClient') private repository: PrismaClient) {}
+  constructor(@inject('PrismaClient') private prisma: PrismaClient) {}
 
   async create({ email, password }: ICreateUser) {
-    const user = await this.repository.user.create({
+    const user = await this.prisma.user.create({
       data: {
         email,
         password
@@ -20,7 +20,7 @@ export class UserRepository implements IUserRepository {
   }
 
   async findFirst(email: string) {
-    const user = await this.repository.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: {
         email
       }

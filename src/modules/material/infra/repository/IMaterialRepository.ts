@@ -7,7 +7,7 @@ import { IDeleteMaterial } from '@modules/material/useCases/deleteMaterial/Delet
 export interface IMaterialRepository {
   create(args: ICreateMaterial): Promise<Material>
   findAll(tenantId: string): Promise<Material[]>
-  findById(findById: string): Promise<Material | null>
+  findById(id: string, tenantId: string): Promise<Material | null>
   update(args: IUpdateMaterial): Promise<Material>
   delete(args: IDeleteMaterial): Promise<Material>
 }

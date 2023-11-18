@@ -3,7 +3,7 @@
 
 generator client {
   provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-arm64-openssl-1.1.x"]
+  binaryTargets = ["native", "linux-arm64-openssl-1.1.x", "linux-arm64-openssl-3.0.x"]
 }
 
 datasource db {
@@ -20,14 +20,14 @@ model User {
 }
 
 model Material {
-  id        String    @id @default(uuid())
-  tenant_id String
-  uom       UoM       @default(UN)
-  quantity  Int
-  cost      Float
-  Stock     Stock?    @relation(fields: [stockId], references: [id])
-  stockId   String?
-  products  Product[]
+  id              String           @id @default(uuid())
+  tenant_id       String
+  uom             UoM              @default(UN)
+  quantity        Int
+  cost            Float
+  Stock           Stock?           @relation(fields: [stockId], references: [id])
+  stockId         String?
+  productMaterial ProductMaterial[]
 
   @@map("material")
 }
@@ -42,14 +42,26 @@ model Stock {
 }
 
 model Product {
-  id        String     @id @default(uuid())
-  tenant_id String
-  name      String
-  materials Material[]
-  cost      Float?
-  price     Float?
+  id              String           @id @default(uuid())
+  tenant_id       String
+  name            String
+  cost            Float?
+  price           Float?
+  productMaterial ProductMaterial[]
 
   @@map("product")
+}
+
+model ProductMaterial {
+  id         String    @id @default(uuid())
+  tenant_id  String
+  material   Material @relation(fields: [materialId], references: [id])
+  materialId String    
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  String
+  quantity   Int
+
+  @@map("product-material")
 }
 
 enum UoM {

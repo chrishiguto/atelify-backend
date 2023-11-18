@@ -6,10 +6,10 @@ import { IStockRepository } from '@modules/stock/infra/repository/IStockReposito
 
 @injectable()
 export class StockRepository implements IStockRepository {
-  constructor(@inject('PrismaClient') private repository: PrismaClient) {}
+  constructor(@inject('PrismaClient') private prisma: PrismaClient) {}
 
   async findAll(tenantId: string) {
-    const items = this.repository.stock.findMany({
+    const items = this.prisma.stock.findMany({
       where: {
         tenant_id: tenantId
       },
@@ -22,7 +22,7 @@ export class StockRepository implements IStockRepository {
   }
 
   async create({ name, tenantId }: ICreateStock) {
-    const item = this.repository.stock.create({
+    const item = this.prisma.stock.create({
       data: {
         name,
         tenant_id: tenantId

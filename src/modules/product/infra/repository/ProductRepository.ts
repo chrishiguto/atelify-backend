@@ -9,11 +9,11 @@ import { IFindProductById } from '@modules/product/useCases/findByIdProduct/Find
 @injectable()
 export class ProductRepository implements IProductRepository {
   constructor(
-    @inject('PrismaClient') private productRepository: PrismaClient
+    @inject('PrismaClient') private prisma: PrismaClient
   ) {}
 
   async create({ name, tenantId }: ICreateProduct) {
-    const product = this.productRepository.product.create({
+    const product = this.prisma.product.create({
       data: {
         name,
         tenant_id: tenantId
@@ -24,23 +24,12 @@ export class ProductRepository implements IProductRepository {
   }
 
   async update({ id, tenantId, name, materials }: IUpdateProduct) {
-    if (!materials?.length) {
-      return null
-    }
-
-    const normalizedMaterials = materials.map((materialId) => ({
-      id: materialId
-    }))
-
-    const product = this.productRepository.product.update({
+    const product = this.prisma.product.update({
       where: {
-        id
+        id,
       },
       data: {
         name,
-        materials: {
-          connect: normalizedMaterials
-        }
       }
     })
 
@@ -48,12 +37,17 @@ export class ProductRepository implements IProductRepository {
   }
 
   async findAll(tenantId: string) {
-    const product = this.productRepository.product.findMany({
+    const product = this.prisma.product.findMany({
       where: {
         tenant_id: tenantId
       },
       include: {
-        materials: true
+        productMaterial: {
+          include: {
+            material: true,
+            product: true
+          }
+        }
       }
     })
 
@@ -61,7 +55,7 @@ export class ProductRepository implements IProductRepository {
   }
 
   async findById({ id, tenantId }: IFindProductById) {
-    const product = this.productRepository.product.findFirst({
+    const product = this.prisma.product.findFirst({
       where: {
         AND: [
           {
@@ -77,7 +71,7 @@ export class ProductRepository implements IProductRepository {
         ]
       },
       include: {
-        materials: true
+        productMaterial: true
       }
     })
 

@@ -6,15 +6,15 @@ export function ensureAuthenticated(
   res: Response,
   next: NextFunction
 ) {
-  const authHeader = req.headers.authorization
-
-  if (!authHeader) {
-    throw new Error('Header is missing')
-  }
-
-  const [, token] = authHeader.split(' ')
-
   try {
+    const authHeader = req.headers.authorization
+
+    if (!authHeader) {
+      throw new Error('Header is missing')
+    }
+
+    const [, token] = authHeader.split(' ')
+
     const { sub } = jwt.verify(
       token,
       'f5d8d8d37c319367aba22471e5b9644b713b3a6166928e3e13941ad5856e66af'
